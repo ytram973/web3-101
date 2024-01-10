@@ -23,6 +23,7 @@ describe('EtherWallet', function(){
         })
     })
 
+    
     describe('Deposit', function(){
         it('should deposit Ether to the contract', async function(){
             const {etherWallet}= await loadFixture(deployFixture)
@@ -39,39 +40,52 @@ describe('EtherWallet', function(){
 
     })
 
-    describe('Withdraw', function(){
-        it('Should witdraw ether from the contract with zerro ETH(not a very useful test'),async function(){
-            const {etherWallet, owner}= await loadFixture(deployFixture)
+    describe('balanceOf', function () {
+        it('Should return the current balance of the contract', async function () {
+          const { etherWallet } = await loadFixture(deployFixture);
+          const depositAmount = ethers.utils.parseEther('1');
+      
+          // Déposer de l'Ether dans le contrat
+          const depositTx = await etherWallet.deposit({ value: depositAmount });
+          await depositTx.wait();
+      
+          // Vérifier le solde du contrat
+          const balance = await etherWallet.balanceOf();
+          expect(balance.toString()).to.equal(depositAmount.toString());
+        });
+      });
+      
 
-
-            const tx = await etherWallet.connect(owner).withdraw(owner.address, ethers.utils.parseEther('0'))
-            await TreeWalker.wait()
-
-            const balance = await ethers.provider.getBalance(etherWallet.address)
-
-            expect(balance.toString()).to.equal(ethers.utils.parseEther('0'))
-        }
-        it('Should witdraw ether from the contract with non-zero ETH'),async function(){
-            const {etherWallet, owner}= await loadFixture(deployFixture)
-           
-            const depositTx= await etherWallet.deposit({
-                value: ethers.utils.parseEther('1')
-
-            })
-            await depositTx.wait()
-            let balance = await ethers.provider.getBalance(etherWallet.address)
-            expect(balance.toString()).to.equal(ethers.utils.parseEther('1'))
-
-
-            const witdrawTx =await etherWallet.withdraw(
-                owner.address,
-                ethers.utils.parseEther('1')
-            )
-                await witdrawTx.wait()
-
-                balance = await ethers.provider.getBalance(etherWallet.address)
-                expect(balance.toString()).to.equal(ethers.utils.parseEther('0'))
-        }
-    })
+      describe('withdraw', function () {
+        it('Should revert the transaction if called by someone other than the owner', async function () {
+          const { etherWallet, otherAccount } = await loadFixture(deployFixture);
+          const withdrawAmount = ethers.utils.parseEther('1');
+      
+          // Essayer de retirer de l'Ether avec un compte autre que le propriétaire
+          await expect(
+            etherWallet.connect(otherAccount).withdraw(otherAccount.address, withdrawAmount)
+          ).to.be.revertedWith('Only owner can withdraw');
+        });
+      
+        it('Should allow the owner to withdraw Ether', async function () {
+          const { etherWallet, owner } = await loadFixture(deployFixture);
+          const depositAmount = ethers.utils.parseEther('1');
+          const withdrawAmount = ethers.utils.parseEther('1');
+      
+          // Déposer de l'Ether dans le contrat
+          const depositTx = await etherWallet.deposit({ value: depositAmount });
+          await depositTx.wait();
+      
+          // Retirer de l'Ether avec le propriétaire
+          const initialBalance = await ethers.provider.getBalance(owner.address);
+          const withdrawTx = await etherWallet.connect(owner).withdraw(owner.address, withdrawAmount);
+          await withdrawTx.wait();
+          const finalBalance = await ethers.provider.getBalance(owner.address);
+      
+          // Vérifier que le solde du propriétaire a augmenté
+          expect(finalBalance.sub(initialBalance)).to.be.closeTo(withdrawAmount, ethers.utils.parseEther('0.01'));
+        });
+      });
+      
 
 })

@@ -87,6 +87,8 @@ function App() {
     }
   }
 
+
+  
   // Deposit ETH to the EtherWallet smart contract
   const depositToEtherWalletContract = async () => {
     try {
