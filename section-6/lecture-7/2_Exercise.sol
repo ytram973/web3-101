@@ -8,7 +8,11 @@ pragma solidity ^0.8.17;
     1) the result of that multiplication
     2) the address of the smart contract that's currently calling the library funciton 
 */
-
+library MathLibrary {
+    function multiply(uint a, uint b) public view returns (uint, address) {
+        return (a * b, address(this));
+    }
+}
 /*
     TODO: Declare the "using for" directive to be able to call the functions of MathLibrary
     for all the unsigned integer values. Then, implement a function called "multiplyExample"
@@ -17,8 +21,10 @@ pragma solidity ^0.8.17;
     2) the address of this smart contract
 */
 contract Exercise {
+    using MathLibrary for uint;
     address owner = address(this);
 
     function multiplyExample(uint _a, uint _b) public view returns (uint, address) {
+        return _a.multiply(_b);
     }
 }

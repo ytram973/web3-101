@@ -10,6 +10,19 @@ pragma solidity ^0.8.17;
     have one argument that is going to be used to set 
     the value of the state variable "age" upon deployment.
 */
+abstract contract SayHello {
+    uint256 public age;
+
+    constructor(uint256 _age) {
+        age = _age;
+    }
+
+    function setAge(uint256 _age) public virtual {}
+
+    function makeMeSayHello() public pure returns (string memory) {
+        return "Hello";
+    }
+}
 
 /*
     TODO: Inherit from the "SayHello" abstract contract and 

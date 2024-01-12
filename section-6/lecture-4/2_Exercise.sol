@@ -25,5 +25,14 @@ contract parent {
     b is 200 so the sum of a + b would be 300. Also, implement a new 
     function called "getValue" that returns the value of sum
 */
-contract Exercise { 
+contract Exercise is parent { 
+    function setValue()external override {
+        uint a = 100;        
+        uint b = 200;
+        sum = a + b;
+    }
+
+    function getValue() external view returns (uint){
+        return sum;
+    }
 }

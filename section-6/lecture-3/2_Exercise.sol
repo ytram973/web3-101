@@ -6,6 +6,8 @@ pragma solidity ^0.8.17;
 */
 
 // TODO: Create a custom error type called "InvalidAmount". Needed `minRequired` but sent `amount`
+error InvalidAmount(uint256 sent, uint256 minRequired );
+
 
 contract Exercise {
     mapping(address => uint) balances;
@@ -17,9 +19,9 @@ contract Exercise {
     
     function list() public payable {
         uint256 amount = msg.value;
-        /* TODO: Check whether the amount being sent is less than the minimum required. If so, 
-           call the custom error defined above and revert the transaction
-        */
+       if(amount< minRequired){
+        revert InvalidAmount({sent: amount, minRequired: minRequired});
+       }
         balances[msg.sender] += amount;
     }
 }
