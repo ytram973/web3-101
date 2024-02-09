@@ -6,9 +6,10 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useContract, useContractRead, useSigner } from 'wagmi'
 import EtherWallet from './artifacts/contracts/EtherWallet.sol/EtherWallet.json'
+import { useAccount } from 'wagmi';
 
 function App() {
-  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+  const contractAddress = '0xe5d5907BFa7D2cde8940a2c2Dc81C33759cE6Ce7'
 
   // EtherWallet Smart contract handling
   const [scBalance, scSetScBalance] = useState(0)
@@ -40,6 +41,23 @@ function App() {
     })
   }
 
+  const { address } = useAccount();
+
+  const withdrawFromEtherWalletContract = async () => {
+    if (!signer) return;
+    try {
+      // Retirer tout le solde du contrat
+      const balance = await depositETH.balanceOf();
+      const tx = await depositETH.withdraw(address, balance);
+      await tx.wait();
+      alert('Withdrawal successful!');
+    } catch (error) {
+      console.error(error);
+      alert('Error during withdrawal');
+    }
+  };
+  
+
   return (
     <div className='container flex flex-col  items-center mt-10'>
       <div className='flex mb-6'>
@@ -56,8 +74,12 @@ function App() {
             placeholder='Enter the amount in ETH'
             onChange={(e) => setEthToUseForDeposit(e.target.value)}
           />
+          
           <Button variant='primary' onClick={depositToEtherWalletContract}>
             Deposit
+          </Button>
+          <Button variant='primary' onClick={withdrawFromEtherWalletContract}>
+            Withdraw
           </Button>
         </Form.Group>
       </Form>

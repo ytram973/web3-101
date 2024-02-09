@@ -21,8 +21,8 @@ task(
 // To export your private key from Metamask, open Metamask and
 // go to Account Details > Export Private Key
 // Beware: NEVER put real Ether into testing accounts
-const PRIVATE_KEY = 'private_key'
-const ALCHEMY_KEY = 'alchemy_key'
+const PRIVATE_KEY = ''
+const ALCHEMY_KEY = ''
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -36,10 +36,10 @@ module.exports = {
     hardhat: {
       chainID: 1337,
     },
-    goerli: {
-      url: `https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       // TODO: Uncomment the below line after updating PRIVATE_KEY above
-      // accounts: [PRIVATE_KEY],
+      accounts: [PRIVATE_KEY],
     },
   },
 }

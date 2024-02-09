@@ -15,6 +15,7 @@ import MultisigWallet from './artifacts/contracts/MultisigWallet.sol/MultisigWal
 function App() {
   const multisigWalletContract = {
     addressOrName: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    // addressOrName: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
     contractInterface: MultisigWallet.abi,
   }
 

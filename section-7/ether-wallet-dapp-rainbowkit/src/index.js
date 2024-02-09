@@ -34,6 +34,7 @@ const { chains, provider } = configureChains(
     chain.optimism,
     chain.arbitrum,
     chain.goerli,
+    chain.sepolia,
     HardhatNetworkChain,
   ],
   [alchemyProvider({ alchemyId: process.env.ALCHEMY_KEY }), publicProvider()]
